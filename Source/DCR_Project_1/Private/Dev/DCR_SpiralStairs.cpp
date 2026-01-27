@@ -32,54 +32,54 @@ void ADCR_SpiralStairs::StairsConstruction()
 		return;
 	}
 
-	int32 StepsTotal = NumberOfTurn * StepsPerTurn;
-	float StepsAngle = 360.0f / StepsPerTurn;
+	int32 lStepsTotal = NumberOfTurn * StepsPerTurn;
+	float lStepsAngle = 360.0f / StepsPerTurn;
 
-	for (int32 i = 0; i < StepsTotal; i++)
+	for (int32 i = 0; i < lStepsTotal; i++)
 	{
-		FString StepName = FString::Printf(TEXT("Step_%d"), i);
-		UStaticMeshComponent* Step = NewObject<UStaticMeshComponent>(this, *StepName);
+		FString lStepName = FString::Printf(TEXT("Step_%d"), i);
+		UStaticMeshComponent* lStep = NewObject<UStaticMeshComponent>(this, *lStepName);
 
-		Step->SetStaticMesh(StepMesh);
-		Step->SetupAttachment(RootComponent);
+		lStep->SetStaticMesh(StepMesh);
+		lStep->SetupAttachment(RootComponent);
 
-		float Angle = FMath::DegreesToRadians(i * StepsAngle);
+		float lAngle = FMath::DegreesToRadians(i * lStepsAngle);
 
-		float X = FMath::Cos(Angle) * Radius;
-		float Y = FMath::Sin(Angle) * Radius;
+		float X = FMath::Cos(lAngle) * Radius;
+		float Y = FMath::Sin(lAngle) * Radius;
 		float Z = i * HeightBeetweenSteps;
 
-		FVector StepLocation = { X, Y, Z };
-		FRotator StepRotation = { 0, i * StepsAngle, 0 };
+		FVector lStepLocation = { X, Y, Z };
+		FRotator lStepRotation = { 0, i * lStepsAngle, 0 };
 
-		Step->SetRelativeLocation(StepLocation);
-		Step->SetRelativeRotation(StepRotation);
-		Step->SetRelativeScale3D(StepScale);
+		lStep->SetRelativeLocation(lStepLocation);
+		lStep->SetRelativeRotation(lStepRotation);
+		lStep->SetRelativeScale3D(StepScale);
 
-		Step->RegisterComponent();
+		lStep->RegisterComponent();
 
-		StairsComponents.Add(Step);
+		StairsComponents.Add(lStep);
 	}
 
-	UStaticMeshComponent* Column = NewObject<UStaticMeshComponent>(this, "Column");
+	UStaticMeshComponent* lColumn = NewObject<UStaticMeshComponent>(this, "Column");
 
-	Column->SetStaticMesh(ColumnMesh);
-	Column->SetupAttachment(RootComponent);
+	lColumn->SetStaticMesh(ColumnMesh);
+	lColumn->SetupAttachment(RootComponent);
 
-	float ColumnHeight = ColumnMesh->GetBoundingBox().GetExtent().Z * 2.f;
+	float lColumnHeight = ColumnMesh->GetBoundingBox().GetExtent().Z * 2.f;
 
-	FTransform StepTransform = StairsComponents[0]->GetComponentTransform();
-	FBoxSphereBounds StepBounds = StairsComponents[0]->CalcBounds(StepTransform);
-	float StepHalfHeight = StepBounds.BoxExtent.Z;
-	float StepHalfWidth = StepBounds.BoxExtent.X;
-	float LastStepLocationZ = (StepsTotal - 1) * HeightBeetweenSteps;
-	float StairsHeight = LastStepLocationZ + StepHalfHeight * 2.f;
+	FTransform lStepTransform = StairsComponents[0]->GetComponentTransform();
+	FBoxSphereBounds lStepBounds = StairsComponents[0]->CalcBounds(lStepTransform);
+	float lStepHalfHeight = lStepBounds.BoxExtent.Z;
+	float lStepHalfWidth = lStepBounds.BoxExtent.X;
+	float lLastStepLocationZ = (lStepsTotal - 1) * HeightBeetweenSteps;
+	float lStairsHeight = lLastStepLocationZ + lStepHalfHeight * 2.f;
 	
-	FVector ColomnLocation = { 0, 0, (StairsHeight / 2.f - StepHalfHeight) };
+	FVector lColomnLocation = { 0, 0, (lStairsHeight / 2.f - lStepHalfHeight) };
 
-	Column->SetRelativeLocation(ColomnLocation);
+	lColumn->SetRelativeLocation(lColomnLocation);
 
-	float ColumnRadius = ColumnMesh->GetBoundingBox().GetExtent().X;
+	float lColumnRadius = ColumnMesh->GetBoundingBox().GetExtent().X;
 
 	int32 lColumnOffset = ColumnOffset;
 
@@ -87,20 +87,20 @@ void ADCR_SpiralStairs::StairsConstruction()
 	{
 		lColumnOffset = Radius;
 	}
-	else if (ColumnOffset < 0 && std::abs(ColumnOffset) >= StepHalfWidth)
+	else if (ColumnOffset < 0 && std::abs(ColumnOffset) >= lStepHalfWidth)
 	{
-		lColumnOffset = -StepHalfWidth;
+		lColumnOffset = -lStepHalfWidth;
 	}
 
-	float ColumnScaleMultiplierXY = (Radius - lColumnOffset) / ColumnRadius;
-	float ColumnScaleMultiplierZ = StairsHeight / ColumnHeight;
-	FVector ColumnScaleZMultiplier = { ColumnScaleMultiplierXY, ColumnScaleMultiplierXY, ColumnScaleMultiplierZ };
+	float lColumnScaleMultiplierXY = (Radius - lColumnOffset) / lColumnRadius;
+	float lColumnScaleMultiplierZ = lStairsHeight / lColumnHeight;
+	FVector lColumnScaleZMultiplier = { lColumnScaleMultiplierXY, lColumnScaleMultiplierXY, lColumnScaleMultiplierZ };
 
-	Column->SetRelativeScale3D(ColumnScaleZMultiplier);
+	lColumn->SetRelativeScale3D(lColumnScaleZMultiplier);
 
 
-	Column->RegisterComponent();
-	StairsComponents.Add(Column);
+	lColumn->RegisterComponent();
+	StairsComponents.Add(lColumn);
 
 }
 
