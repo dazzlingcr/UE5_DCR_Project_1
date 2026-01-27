@@ -116,12 +116,6 @@ void ADCR_SpiralStairs::DestroyStairComponents()
 	}
 }
 
-void ADCR_SpiralStairs::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 void ADCR_SpiralStairs::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
