@@ -1,5 +1,4 @@
 #include "Dev/DCR_Button.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 ADCR_Button::ADCR_Button()
 {
@@ -37,8 +36,8 @@ void ADCR_Button::CollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent
 		return;
 	}
 		
-	APawn* lInteractingPawn = Cast<APawn>(OtherActor);
-	if (lInteractingPawn)
+	APawn* lInteractingCharacter = Cast<APawn>(OtherActor);
+	if (lInteractingCharacter)
 	{
 		NetMulticast_NiagaraSystem();
 	}

@@ -56,7 +56,12 @@ void ADCR_Platform::CollisionBeginOverlap(UPrimitiveComponent* OverlappedCompone
 		return;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, TEXT("Begin"));
+	APawn* lInteractingCharacter = Cast<APawn>(OtherActor);
+	if (!lInteractingCharacter)
+	{
+		return;
+	}
+
 	PlatformCounter = PlatformCounter + 1;
 
 	if (PlatformCounter != 1)
@@ -75,7 +80,12 @@ void ADCR_Platform::CollisionEndOverlap(UPrimitiveComponent* OverlappedComponent
 		return;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, TEXT("End"));
+	APawn* lInteractingCharacter = Cast<APawn>(OtherActor);
+	if (!lInteractingCharacter)
+	{
+		return;
+	}
+
 	PlatformCounter = PlatformCounter - 1;
 
 	if (PlatformCounter != 0)
