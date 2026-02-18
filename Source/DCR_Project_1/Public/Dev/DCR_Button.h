@@ -56,8 +56,9 @@ protected:
 	UFUNCTION()
 	void CollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-private:	
+	UFUNCTION(NetMulticast, Reliable)
+	void NetMulticast_NiagaraSystem();
 
-	virtual void Tick(float DeltaTime) override;
+private:	
 
 };

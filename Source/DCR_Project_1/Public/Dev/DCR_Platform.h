@@ -19,22 +19,21 @@ class DCR_PROJECT_1_API ADCR_Platform : public AActor
 
 public:
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(Replicated)
 	UStaticMeshComponent* PlatformMesh;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(Replicated)
 	UBoxComponent* BoxCollision;
 
-	UPROPERTY(BlueprintReadOnly)
 	FVector PlatformScale = { 1.f, 1.f, 1.f };
 
-	UPROPERTY(BlueprintReadOnly)
 	FVector CollisionScale = { 1.25f, 1.25f, 0.5f };
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Settings")
 	float LiftingHeight = 240.f;
 	
 protected:
+
 	FTimeline TimeLine; 
 
 	FTimerHandle TimerHandle;
@@ -42,6 +41,8 @@ protected:
 	static const float DeltaTimeTimeLine;
 
 	FVector PlatformLocation;
+
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
 

@@ -1,7 +1,10 @@
 #include "Dev/DCR_Button.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 ADCR_Button::ADCR_Button()
 {
+	bReplicates = true;
+
 	PlatformMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	const ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Platform(TEXT("/Game/DCR_Project1/Levels/Lvl_1/_GENERATED/nikc/PlatformBox.PlatformBox"));
 	PlatformMesh->SetStaticMesh(SM_Platform.Object);
@@ -15,7 +18,7 @@ ADCR_Button::ADCR_Button()
 	const ConstructorHelpers::FObjectFinder<UNiagaraSystem> Asset(TEXT("/Game/DCR_Project1/Blueprints/NS_NIaGAra.NS_NIaGAra"));
 	NiagaraAsset = Asset.Object;
 
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
@@ -29,7 +32,16 @@ void ADCR_Button::BeginPlay()
 
 void ADCR_Button::CollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraAsset, NiagaraLocation, FRotator::ZeroRotator);
+	if (!HasAuthority())
+	{
+		return;
+	}
+		
+	APawn* lInteractingPawn = Cast<APawn>(OtherActor);
+	if (lInteractingPawn)
+	{
+		NetMulticast_NiagaraSystem();
+	}
 }
 
 void ADCR_Button::CollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -37,9 +49,10 @@ void ADCR_Button::CollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 	
 }
 
-void ADCR_Button::Tick(float DeltaTime)
+void ADCR_Button::NetMulticast_NiagaraSystem_Implementation()
 {
-	Super::Tick(DeltaTime);
-
+	if (!HasAuthority())
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraAsset, NiagaraLocation, FRotator::ZeroRotator);
+	}
 }
-
