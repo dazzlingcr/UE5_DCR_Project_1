@@ -34,6 +34,8 @@ public:
 	
 protected:
 
+	int32 PlatformCounter;
+
 	FTimeline TimeLine; 
 
 	FTimerHandle TimerHandle;

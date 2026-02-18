@@ -43,6 +43,7 @@ void ADCR_Platform::BeginPlay()
 	Super::BeginPlay();
 
 	PlatformLocation = PlatformMesh->GetRelativeLocation();
+	PlatformCounter = 0;
 
 	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &ADCR_Platform::CollisionBeginOverlap);
 	BoxCollision->OnComponentEndOverlap.AddDynamic(this, &ADCR_Platform::CollisionEndOverlap);
@@ -55,11 +56,16 @@ void ADCR_Platform::CollisionBeginOverlap(UPrimitiveComponent* OverlappedCompone
 		return;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("BeginOverlap"));
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, TEXT("Begin"));
+	PlatformCounter = PlatformCounter + 1;
+
+	if (PlatformCounter != 1)
+	{
+		return;
+	}
 
 	TimeLine.Play();
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &ADCR_Platform::TickTimeLine, DeltaTimeTimeLine, true, 0.0f);
-
 }
 
 void ADCR_Platform::CollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -69,7 +75,14 @@ void ADCR_Platform::CollisionEndOverlap(UPrimitiveComponent* OverlappedComponent
 		return;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("EndOverlap"));
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, TEXT("End"));
+	PlatformCounter = PlatformCounter - 1;
+
+	if (PlatformCounter != 0)
+	{
+		return;
+	}
+
 	TimeLine.Reverse();
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &ADCR_Platform::TickTimeLine, DeltaTimeTimeLine, true, 0.0f);
 }
